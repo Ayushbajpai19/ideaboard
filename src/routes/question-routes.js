@@ -6,8 +6,8 @@ const { v4: uuidv4 } = require('uuid');
 const post = require("../models/post")
 const question = require("../models/question")
 const solution = require("../models/solution")
-const User = require("../models/user")
-const Comment = require("../models/comment")
+// const User = require("../models/user")
+// const Comment = require("../models/comment")
 const mailer = require("nodemailer");
 
 const router = express.Router();
@@ -39,13 +39,13 @@ router.get('/questions/:uid', async (req,res,next)=>{
 router.post('/post/questions', async (req, res, next)=>{
     const {uid, pid, title, body, role} = req.body
     console.log(role)
-    const users = await User.find().exec();
-    const result = users.find(user => user.id === uid)
-    if (!result)
-        return res.status(422).json({message: "User does not exist, hence post cannot be created"})
+    // const users = await User.find().exec();
+    // const result = users.find(user => user.id === uid)
+    // if (!result)
+    //     return res.status(422).json({message: "User does not exist, hence post cannot be created"})
     
-    const session = await mongoose.startSession();
-    session.startTransaction();
+    // const session = await mongoose.startSession();
+    // session.startTransaction();
     
     const createdpost = new post({
         pid: uuidv4(),
@@ -59,8 +59,8 @@ router.post('/post/questions', async (req, res, next)=>{
         questions: 0,
         createdAt: new Date()
     })
-    await createdpost.save({session: session}); 
-    session.commitTransaction();
+    let postId = await createdpost.save({session: session}); 
+    // session.commitTransaction();
     res.status(201).send(createdpost);
     if (role!="admin"){
         var mailoption = {

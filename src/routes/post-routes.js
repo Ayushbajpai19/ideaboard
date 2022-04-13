@@ -1,10 +1,13 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const { v4: uuidv4 } = require('uuid');
+// const { v4: uuidv4 } = require('uuid');
 const post = require("../models/post")
 // const User = require("../models/user")
 const Comment = require("../models/comment")
 const mailer = require("nodemailer");
+const { networkInterfaces } = require('nodemailer/lib/shared');
+const { estimatedDocumentCount } = require('../models/post');
+const { resetWatchers } = require('nodemon/lib/monitor/watch');
 
 const router = express.Router();
 
@@ -22,6 +25,7 @@ router.get('/posts', async (req,res,next)=>{
 });
 
 router.get('/posts/:uid', async (req,res,next)=>{
+    console.log("Getting a Post");
     const userId = req.params.uid;
     await post.find({ 'uid': userId }, function (err, posts) {
         if (!err && posts.length > 0)
@@ -33,50 +37,52 @@ router.get('/posts/:uid', async (req,res,next)=>{
 });
 
 router.post('/users/posts', async (req, res, next)=>{
-    const {uid, title, body, role} = req.body
-    console.log(role)
-    // const users = await User.find().exec();
-    // const result = users.find(user => user.id === uid)
-    // if (!result)
-    //     return res.status(422).json({message: "User does not exist, hence post cannot be created"})
-    
-    const session = await mongoose.startSession();
-    session.startTransaction();
+    const {uid, title, body, role, tags} = req.body
+    // tags is an Array of tags like news, post etc..
+    console.log(uid);
+
+    // const session = await mongoose.startSession();
+    // session.startTransaction();
     
     // We only need to fetch the uid from firebase user uid, so the part before this comment can be removed.
     const createdpost = new post({
-        pid: uuidv4(),
+        // pid: uuidv4(),
         uid,
         approved: (role==="admin")?true:false,
         title,
         body,
+        tags: tags,
         likes: [],
         dislikes: [],
         comments: 0,
         questions: 0,
         createdAt: new Date()
     })
-    await createdpost.save({session: session}); 
-    session.commitTransaction();
-    res.status(201).send(createdpost);
-    if (role!="admin"){
-        var mailoption = {
-            from: "kousani.sa@highradius.com",
-            to: "avinash.ambrose@highradius.com",
-            subject: "New Post added",
-            html: `
-                <p>New Idea has been added on Ideaboard! Go and check <p/>
-            `
-        }
-        smtpProtocol.sendMail(mailoption, async function(err, response){
-            if(err) {
-                console.log("Error in mail sending: ",err);
-                return res.status(422).json({message: "Oops! Some error occured"});
-            } 
-            console.log('Message Sent' + response);
-            smtpProtocol.close();
-        });
-    }
+    // await createdpost.save({session: session}); 
+    let saved_post = await createdpost.save(); 
+
+    res.json(saved_post);
+    // session.commitTransaction();
+
+    // res.status(201).send(createdpost);
+    // if (role!="admin"){
+    //     var mailoption = {
+    //         from: "kousani.sa@highradius.com",
+    //         to: "avinash.ambrose@highradius.com",
+    //         subject: "New Post added",
+    //         html: `
+    //             <p>New Idea has been added on Ideaboard! Go and check <p/>
+    //         `
+    //     }
+    //     smtpProtocol.sendMail(mailoption, async function(err, response){
+    //         if(err) {
+    //             console.log("Error in mail sending: ",err);
+    //             return res.status(422).json({message: "Oops! Some error occured"});
+    //         } 
+    //         console.log('Message Sent' + response);
+    //         smtpProtocol.close();
+    //     });
+    // }
 })
 
 router.delete('/users/posts/', async (req, res, next)=>{
