@@ -14,7 +14,7 @@ const solutionRoute = require("./routes/solution-routes");
 
 const port = 5001;
 
-const dbUrl = 'mongodb://localhost/id'
+const dbUrl = 'mongodb://localhost/idb'
 
 app.use(cors());
 
