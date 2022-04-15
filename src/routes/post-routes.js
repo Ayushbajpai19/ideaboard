@@ -57,7 +57,7 @@ router.get('/posts/:uid', async (req,res,next)=>{
 //     }).clone().catch(function(err){ console.log(err)});
 // })
 
-// Get all the posts on basis of tags (Multiple Dynamic Tag)
+// Get all the posts on basis of tags (Multiple Dynamic Tag) [Achieved the GOAL but, might not be the correct way]
 router.get("/:tags/posts/", async (req, res, next) => {
     console.log("Getting a News Post");
     // const userId = req.params.uid;
@@ -74,57 +74,63 @@ router.get("/:tags/posts/", async (req, res, next) => {
     //     }
     // }).clone().catch(function(err){ console.log(err)});
 
-    function fetch() {
-        return new Promise(async (resolve, reject) => {
-            var list_all_elements = [];
-            for (let elem of tags) {
-                // console.log("Elem: " + elem);
-                await post.find({ 'tags': elem }, function (err, posts) {
-                    if (!err && posts.length > 0){
-                        // res.status(200).send(posts);
-                        console.log(`${elem} => ${posts}`);
-                        for (let post of posts){
-                            list_all_elements.push(post);
-                        }
-                    }
-                    // else{
-                    //     console.log(`Can not find any Articles for ${elem}`);
-                    //     // res.status(422).send("<h4>Posts not available currently </h4>");
-                    // }
-                }).clone().catch(function(err){ console.log(err)});
-            }
-            resolve(list_all_elements);
-            // res.status(200).send(list_all_elements) ? list_all_elements.length>0:res.status(422).send("<h4>Posts not available currently </h4>")
-        })
-    }
-    // const all_elements = new Promise(async (resolve, reject) => {
-    //     let list_all_elements = [];
-    //     for (let elem of tags) {
-    //         // console.log("Elem: " + elem);
-    //         await post.find({ 'tags': elem }, function (err, posts) {
-    //             if (!err && posts.length > 0){
-    //                 // res.status(200).send(posts);
-    //                 console.log(`${elem} => ${posts}`);
-    //                 for (let post of posts){
-    //                     list_all_elements.push(post);
+    // function fetch() {
+    //     return new Promise(async (resolve, reject) => {
+    //         var list_all_elements = [];
+    //         for (let elem of tags) {
+    //             // console.log("Elem: " + elem);
+    //             await post.find({ 'tags': elem }, function (err, posts) {
+    //                 if (!err && posts.length > 0){
+    //                     // res.status(200).send(posts);
+    //                     console.log(`${elem} => ${posts}`);
+    //                     for (let post of posts){
+    //                         list_all_elements.push(post);
+    //                     }
     //                 }
-    //             }
-    //             // else{
-    //             //     console.log(`Can not find any Articles for ${elem}`);
-    //             //     // res.status(422).send("<h4>Posts not available currently </h4>");
-    //             // }
-    //         }).clone().catch(function(err){ console.log(err)});
-    //     }
-    //     resolve(list_all_elements);
-    //     return list_all_elements;
-    //     // res.status(200).send(list_all_elements) ? list_all_elements.length>0:res.status(422).send("<h4>Posts not available currently </h4>")
-    // })
+    //                 // else{
+    //                 //     console.log(`Can not find any Articles for ${elem}`);
+    //                 //     // res.status(422).send("<h4>Posts not available currently </h4>");
+    //                 // }
+    //             }).clone().catch(function(err){ console.log(err)});
+    //         }
+    //         resolve(list_all_elements);
+    //         // res.status(200).send(list_all_elements) ? list_all_elements.length>0:res.status(422).send("<h4>Posts not available currently </h4>")
+    //     })
+    // }
+
+    const all_elements = new Promise(async (resolve, reject) => {
+        let list_all_elements = [];
+        let c = 0;
+        for (let elem of tags) {
+            // console.log("Elem: " + elem);
+            await post.find({ 'tags': elem }, function (err, posts) {
+                if (!err && posts.length > 0){
+                    // res.status(200).send(posts);
+                    console.log(`${elem} => ${posts}`);
+                    for (let post of posts){
+                        list_all_elements.push(post);
+                    }
+                    c+=1;
+                }
+                if (c==tags.length) {
+                    res.status(200).send(list_all_elements);
+                }
+                // else{
+                //     console.log(`Can not find any Articles for ${elem}`);
+                //     // res.status(422).send("<h4>Posts not available currently </h4>");
+                // }
+            }).clone().catch(function(err){ console.log(err)});
+        }
+        resolve(list_all_elements);
+        // return list_all_elements;
+        // res.status(200).send(list_all_elements) ? list_all_elements.length>0:res.status(422).send("<h4>Posts not available currently </h4>")
+    })
 
     
-    fetch().then((el) => {
-        console.log("Elements: ", el);
-        res.status(200).send(el) ? el.length>0 : res.status(422).send("<h4>Posts not available currently </h4>");
-    })
+    // await fetch().then((el) => {
+    //     console.log("Elements: ", el);
+    //     res.status(200).send(el) ? el.length>0 : res.status(422).send("<h4>Posts not available currently </h4>");
+    // })
 })
 
 // Creating a Post
