@@ -134,7 +134,7 @@ router.get("/:tags/posts/", async (req, res, next) => {
 })
 
 // Creating a Post
-router.post('/users/posts', async (req, res, next)=>{
+router.post('/user/post', async (req, res, next)=>{
     const {uid, title, body, role, tags} = req.body
     // tags is an Array of tags like news, post etc..
     console.log(uid);
@@ -190,7 +190,7 @@ router.post('/users/posts', async (req, res, next)=>{
     // }
 })
 
-router.delete('/users/posts/', async (req, res, next)=>{
+router.delete('/user/post/', async (req, res, next)=>{
     const {postId} = req.body;
     try{
         const response = await post.deleteOne({pid: postId})
@@ -202,12 +202,12 @@ router.delete('/users/posts/', async (req, res, next)=>{
     }
 })
 
-router.patch('/users/posts/', async (req, res, next)=>{
+router.patch('/user/post/', async (req, res, next)=>{
     const {pid, title, body} = req.body;
     console.log(pid)
     try{
         await post.updateOne(
-            { 'pid': pid }, 
+            { '_id': pid },
             { $set: { title, body } }
         )
         await post.findOne({'pid': pid}, (err, result)=>{
@@ -222,17 +222,17 @@ router.patch('/users/posts/', async (req, res, next)=>{
     }
 })
 
-router.patch('/posts/reaction', async (req, res, next) => {
+router.patch('/post/reaction', async (req, res, next) => {
     const {pid, uid, like} = req.body;
     try{
         if (like==1)
             await post.updateOne(
-                { 'pid': pid }, 
+                { '_id': pid }, 
                 { $addToSet: { 'likes': uid  }, $pull: {'dislikes': uid} }
             )
         else
             await post.updateOne(
-                { 'pid': pid }, 
+                { '_id': pid }, 
                 { $addToSet: { 'dislikes': uid  }, $pull: {'likes': uid} }
             )
         await post.findOne({'pid': pid}, (err, result)=>{
@@ -247,12 +247,12 @@ router.patch('/posts/reaction', async (req, res, next) => {
     }
 })
 
-router.patch('/users/posts/approvePost', async (req, res, next)=>{
+router.patch('/user/post/approvePost', async (req, res, next)=>{
     const {pid} = req.body;
     console.log(pid)
     try{
         await post.updateOne(
-            { 'pid': pid }, 
+            { '_id': pid },
             { $set: { approved: true } }
         )
         await post.findOne({'pid': pid}, (err, result)=>{

@@ -14,14 +14,14 @@ const solutionRoute = require("./routes/solution-routes");
 
 const port = 5001;
 
-const dbUrl = 'mongodb://localhost/idb'
+const dbUrl = 'mongodb://localhost/i'
 
 app.use(cors());
 
 // app.use(middleware.decodeToken);
 
 // This is only for a test purpose
-app.get('/api/todos', (req, res) => {
+app.get('/api/tasks', (req, res) => {
 	return res.json({
 		todos: [
 			{
