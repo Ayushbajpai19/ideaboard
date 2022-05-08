@@ -1,0 +1,63 @@
+.doubt {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+buttie {
+    display:flex;
+    width: 600px;
+    background: #fc7500;
+    border: 10px ;
+    color: white;
+    font-size: 15px;
+    text-align: center;
+    padding: 8px 20px;
+    border-radius: 4px;
+    transition-duration: 0.4s;
+    margin-bottom: 10px;
+  }
+
+  .buttie:hover {
+    background-color: #fc7500;
+    color: white;
+  }
+
+  buttonii {
+    margin-top: 30px;
+    border: 2px solid black;
+    background-color: white;
+    color: black;
+    padding: 5px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    border-color: #fc7500;
+    color: #fc7500;
+    margin-bottom: 30px;
+  }
+
+  .buttonii:hover {
+    background: #fc7500;
+    color: white;
+  }
+
+  butty {
+      margin-top: 10px;
+    display:flex;
+    width: 80px;
+    background: #fc7500;
+    border: 10px ;
+    color: white;
+    font-size: 15px;
+    text-align: center;
+    padding: 8px 20px;
+    border-radius: 4px;
+    transition-duration: 0.4s;
+    margin-bottom: 10px;
+  }
+
+  .butty:hover {
+    background-color: #fc7500;
+    color: white;
+  }

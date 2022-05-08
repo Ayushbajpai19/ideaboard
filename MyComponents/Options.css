@@ -1,0 +1,33 @@
+.options{
+    margin-top: 20px;
+    margin-bottom: 20px ;
+}
+
+#stating{
+    display: flex;
+    flex-direction: row;
+    height: auto;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+buttons {
+    display:flex;
+    text-align: center;
+    width: 125px;
+    background: #fc7500;
+    border: none;
+    color: white;
+    font-size: 15px;
+    padding: 8px 35px;
+    border-radius: 10px;
+    transition-duration: 0.4s;
+  }
+
+  .buttons:hover {
+    background-color: #fc7500;
+    color: white;
+  }
+  
